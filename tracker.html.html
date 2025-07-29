@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin: 20px;
+      background: #fff0f5;
+      color: #4b0082;
+    }
+    input, select, button {
+      padding: 8px;
+      margin: 5px;
+      font-size: 16px;
+    }
+    table {
+      margin: 20px auto;
+      border-collapse: collapse;
+      width: 90%;
+    }
+    th, td {
+      padding: 10px;
+      border: 1px solid #aaa;
+    }
+    th {
+      background-color: #fcdff0;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🐷 My Piggy Bank</h1>
+  <input type='number' id='amount' placeholder='Enter ₹ amount'>
+  <select id='type'>
+    <option value='Saved'>Saved</option>
+    <option value='Spent'>Spent</option>
+  </select>
+  <button onclick='addEntry()'>Add</button>
+
+  <table>
+    <thead>
+      <tr><th>Date</th><th>Type</th><th>Amount (₹)</th></tr>
+    </thead>
+    <tbody id='entryTable'></tbody>
+  </table>
+
+  <script>
+    let entries = JSON.parse(localStorage.getItem('piggyData')) || [];
+
+    function renderTable() {
+      const table = document.getElementById('entryTable');
+      table.innerHTML = '';
+      entries.forEach(entry => {
+        const row = '<tr><td>' + entry.date + '</td><td>' + entry.type + '</td><td>₹' + entry.amount + '</td></tr>';
+        table.innerHTML += row;
+      });
+    }
+
+    function addEntry() {
+      const amount = parseFloat(document.getElementById('amount').value);
+      const type = document.getElementById('type').value;
+      if (!amount || amount <= 0) return alert('Enter a valid amount');
+      const entry = {
+        date: new Date().toLocaleDateString(),
+        type,
+        amount: amount.toFixed(2)
+      };
+      entries.push(entry);
+      localStorage.setItem('piggyData', JSON.stringify(entries));
+      renderTable();
+      document.getElementById('amount').value = '';
+    }
+
+    renderTable();
+  </script>
+
+</body>
+</html>
